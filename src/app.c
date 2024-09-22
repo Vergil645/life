@@ -1,16 +1,16 @@
 #include "sim.h"
 
 void app() {
-  int grid[SIM_Y_SIZE][SIM_X_SIZE] = {0};
+  int grid[SIM_Y_SIZE * SIM_X_SIZE] = {0};
 
   // ----- Initialization
 
   for (int y = 0; y < SIM_Y_SIZE; ++y)
     for (int x = 0; x < SIM_X_SIZE; ++x)
       if (simRand() % 5 == 0)
-        grid[y][x] = 1;
+        grid[y * SIM_X_SIZE + x] = 1;
       else
-        grid[y][x] = 0;
+        grid[y * SIM_X_SIZE + x] = 0;
 
   // ----- Evolution
 
@@ -22,37 +22,38 @@ void app() {
         // count the number of living neighbours
 
         if (y > 0) {
-          live_neighbours += grid[y - 1][x] & 1;
+          live_neighbours += grid[(y - 1) * SIM_X_SIZE + x] & 1;
           if (x > 0)
-            live_neighbours += grid[y - 1][x - 1] & 1;
+            live_neighbours += grid[(y - 1) * SIM_X_SIZE + x - 1] & 1;
           if (x + 1 < SIM_X_SIZE)
-            live_neighbours += grid[y - 1][x + 1] & 1;
+            live_neighbours += grid[(y - 1) * SIM_X_SIZE + x + 1] & 1;
         }
         if (y + 1 < SIM_Y_SIZE) {
-          live_neighbours += grid[y + 1][x] & 1;
+          live_neighbours += grid[(y + 1) * SIM_X_SIZE + x] & 1;
           if (x > 0)
-            live_neighbours += grid[y + 1][x - 1] & 1;
+            live_neighbours += grid[(y + 1) * SIM_X_SIZE + x - 1] & 1;
           if (x + 1 < SIM_X_SIZE)
-            live_neighbours += grid[y + 1][x + 1] & 1;
+            live_neighbours += grid[(y + 1) * SIM_X_SIZE + x + 1] & 1;
         }
         if (x > 0)
-          live_neighbours += grid[y][x - 1] & 1;
+          live_neighbours += grid[y * SIM_X_SIZE + x - 1] & 1;
         if (x + 1 < SIM_X_SIZE)
-          live_neighbours += grid[y][x + 1] & 1;
+          live_neighbours += grid[y * SIM_X_SIZE + x + 1] & 1;
 
         // make a transition
 
-        if (grid[y][x]) {
+        if (grid[y * SIM_X_SIZE + x]) {
           if (live_neighbours == 2 || live_neighbours == 3)
-            grid[y][x] |= 2;
+            grid[y * SIM_X_SIZE + x] |= 2;
         } else {
           if (live_neighbours == 3)
-            grid[y][x] |= 2;
+            grid[y * SIM_X_SIZE + x] |= 2;
         }
 
         // draw a pixel
 
-        simPutPixel(x, y, 0xFF000000 + 0xFFFFFF * (grid[y][x] >> 1));
+        simPutPixel(x, y,
+                    0xFF000000 + 0xFFFFFF * (grid[y * SIM_X_SIZE + x] >> 1));
       }
     }
 
@@ -60,7 +61,7 @@ void app() {
 
     for (int y = 0; y < SIM_Y_SIZE; ++y)
       for (int x = 0; x < SIM_X_SIZE; ++x)
-        grid[y][x] >>= 1;
+        grid[y * SIM_X_SIZE + x] >>= 1;
 
     // flush generated frame
 
