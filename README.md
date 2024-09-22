@@ -8,7 +8,7 @@ Simple `C` implementation of Conway's Game of Life based on `SDL2` library.
 
 ```sh
 cmake -S . -B build
-makce -C build
+make -C build
 ```
 
 ## Run
