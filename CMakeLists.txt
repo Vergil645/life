@@ -4,8 +4,8 @@ project(Life LANGUAGES C)
 
 set(CMAKE_C_STANDARD 11)
 
-set(CMAKE_C_COMPILER "/usr/bin/clang")
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+set(CMAKE_C_COMPILER "/usr/bin/clang-18")
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++-18")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
