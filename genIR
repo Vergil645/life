@@ -4,4 +4,4 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 mkdir "${SCRIPT_DIR}/IR" &> /dev/null
 
-clang -I "${SCRIPT_DIR}/include" "${SCRIPT_DIR}/src/app.c" -S -O2 -emit-llvm -o "${SCRIPT_DIR}/IR/app.ll"
+clang-18 -I "${SCRIPT_DIR}/include" "${SCRIPT_DIR}/src/app.c" -S -O2 -emit-llvm "${@}" -o "${SCRIPT_DIR}/IR/app.ll"
