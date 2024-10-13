@@ -1,66 +1,68 @@
 #include "sim.h"
 
 void app() {
-    int grid[SIM_Y_SIZE * SIM_X_SIZE] = {0};
+    int grid[(SIM_Y_SIZE + 2) * (SIM_X_SIZE + 2)] = {0};
+    int new_grid[(SIM_Y_SIZE + 2) * (SIM_X_SIZE + 2)] = {0};
+
+    const int row_size = SIM_X_SIZE + 2;
+    const int grid_size = (SIM_Y_SIZE + 2) * (SIM_X_SIZE + 2);
 
     // ----- Initialization
 
-    for (int y = 0; y < SIM_Y_SIZE; ++y)
-        for (int x = 0; x < SIM_X_SIZE; ++x)
+    for (int y = 1; y <= SIM_Y_SIZE; ++y)
+        for (int x = 1; x <= SIM_X_SIZE; ++x)
             if (simRand() % 5 == 0)
-                grid[y * SIM_X_SIZE + x] = 1;
+                grid[y * row_size + x] = 1;
             else
-                grid[y * SIM_X_SIZE + x] = 0;
+                grid[y * row_size + x] = 0;
 
     // ----- Evolution
 
-    for (int step = 0; step < 1000; ++step) {
-        for (int y = 0; y < SIM_Y_SIZE; ++y) {
-            for (int x = 0; x < SIM_X_SIZE; ++x) {
-                int live_neighbours = 0;
+    for (int generation = 0; generation < 1000; ++generation) {
+        for (int i = row_size; i < grid_size - row_size; ++i) {
+            const int x = i % row_size;
+            const int y = i / row_size;
 
-                // count the number of living neighbours
+            if (x == 0 || x == row_size - 1)
+                continue;
 
-                if (y > 0) {
-                    live_neighbours += grid[(y - 1) * SIM_X_SIZE + x] & 1;
-                    if (x > 0)
-                        live_neighbours += grid[(y - 1) * SIM_X_SIZE + x - 1] & 1;
-                    if (x + 1 < SIM_X_SIZE)
-                        live_neighbours += grid[(y - 1) * SIM_X_SIZE + x + 1] & 1;
-                }
-                if (y + 1 < SIM_Y_SIZE) {
-                    live_neighbours += grid[(y + 1) * SIM_X_SIZE + x] & 1;
-                    if (x > 0)
-                        live_neighbours += grid[(y + 1) * SIM_X_SIZE + x - 1] & 1;
-                    if (x + 1 < SIM_X_SIZE)
-                        live_neighbours += grid[(y + 1) * SIM_X_SIZE + x + 1] & 1;
-                }
-                if (x > 0)
-                    live_neighbours += grid[y * SIM_X_SIZE + x - 1] & 1;
-                if (x + 1 < SIM_X_SIZE)
-                    live_neighbours += grid[y * SIM_X_SIZE + x + 1] & 1;
+            int* cell = &grid[i];
 
-                // make a transition
+            // draw a pixel
 
-                if (grid[y * SIM_X_SIZE + x]) {
-                    if (live_neighbours == 2 || live_neighbours == 3)
-                        grid[y * SIM_X_SIZE + x] |= 2;
-                } else {
-                    if (live_neighbours == 3)
-                        grid[y * SIM_X_SIZE + x] |= 2;
-                }
+            simPutPixel(x - 1, y - 1, 0xFF000000 + 0xFFFFFF * (*cell));
 
-                // draw a pixel
+            // count the number of living neighbours
 
-                simPutPixel(x, y, 0xFF000000 + 0xFFFFFF * (grid[y * SIM_X_SIZE + x] >> 1));
-            }
+            int live_neighbours = 0;
+
+            int* ptr_1 = cell - row_size;
+            live_neighbours += *(ptr_1 - 1);
+            live_neighbours += *ptr_1;
+            live_neighbours += *(ptr_1 + 1);
+
+            live_neighbours += *(cell - 1);
+            live_neighbours += *(cell + 1);
+
+            int* ptr_2 = cell + row_size;
+            live_neighbours += *(ptr_2 - 1);
+            live_neighbours += *ptr_2;
+            live_neighbours += *(ptr_2 + 1);
+
+            // make a transition
+
+            int* new_cell = &new_grid[i];
+
+            if (live_neighbours == 3 || (*cell != 0 && live_neighbours == 2))
+                *new_cell = 1;
+            else
+                *new_cell = 0;
         }
 
         // transfer the grid to a new state
 
-        for (int y = 0; y < SIM_Y_SIZE; ++y)
-            for (int x = 0; x < SIM_X_SIZE; ++x)
-                grid[y * SIM_X_SIZE + x] >>= 1;
+        for (int i = 0; i < grid_size; ++i)
+            grid[i] = new_grid[i];
 
         // flush generated frame
 

@@ -8,7 +8,7 @@ Simple `C` implementation of Conway's Game of Life based on `SDL2` library.
 
 ```sh
 cmake -S . -B build
-make -C build
+cmake --build build
 ```
 
 ## Run
@@ -40,23 +40,26 @@ Brief summary:
 ```
 "Instruction <- User"           Percentage
 ------------------------------  ------------
-getelementptr <- load           14.2%
-icmp <- br                      14.0%
-load <- and                     12.2%
-and <- add                      12.2%
-sext <- getelementptr           7.7%
-or <- add                       6.2%
-zext <- getelementptr           6.1%
-add <- sext                     6.1%
-or <- zext                      3.1%
-add <- zext                     3.1%
+getelementptr <- load           16.8%
+getelementptr <- getelementptr  14.9%
+load <- add                     14.9%
+add <- add                      11.2%
+add <- icmp                     5.7%
+add <- call                     5.6%
+icmp <- and                     3.7%
+icmp <- br                      2.0%
 getelementptr <- store          2.0%
-load <- or                      1.5%
-load <- icmp                    1.5%
-ashr <- mul                     1.5%
-mul <- add                      1.5%
-add <- call                     1.5%
-add <- add                      1.5%
-or <- sext                      1.5%
+zext <- store                   2.0%
+trunc <- udiv                   1.9%
+trunc <- urem                   1.9%
+urem <- switch                  1.9%
+urem <- add                     1.9%
+udiv <- add                     1.9%
+mul <- add                      1.9%
+load <- icmp                    1.9%
+load <- mul                     1.9%
+icmp <- or                      1.9%
+and <- or                       1.9%
+or <- zext                      1.9%
 ...
 ```
