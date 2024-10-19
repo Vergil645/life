@@ -63,3 +63,11 @@ and <- or                       1.9%
 or <- zext                      1.9%
 ...
 ```
+
+## IRGen
+
+Original source file `app.c` has been modified in order to simplify its IR.
+All IR files has been generated again as well as statistics about instruction uses (LLVM pass).
+
+Source code of IR generator is placed in [IRGen](./IRGen/) directory.
+Also within [IR](./IR/) directory file `app_gen.ll` has been placed, which contains generated IR.
