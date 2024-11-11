@@ -185,11 +185,11 @@ _ISA(
 )
 
 /*
-ADD_ASSIGN_LOAD_i R1 R2 imm
+ADD_ASSIGN_LOAD_bi R1 R2 imm
 "R1 = R1 + zero_extended(load_byte(R2 + imm))"
 */
 _ISA(
-    0x8, ADD_ASSIGN_LOAD_i, SKIP_3ARGS, READ_2REGS_IMM, WRITE_2REGS_IMM,
+    0x8, ADD_ASSIGN_LOAD_bi, SKIP_3ARGS, READ_2REGS_IMM, WRITE_2REGS_IMM,
     { C->RegFile[R1] += static_cast<uint64_t>(C->Stack[C->RegFile[R2] + R3Imm]); },
     {
         Value* R2_as_ptr = builder.CreateIntToPtr(LOAD_REG(I.R2), builder.getPtrTy());
