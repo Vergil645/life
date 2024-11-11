@@ -4,7 +4,7 @@ using namespace std;
 
 CPU *CPU::C;
 
-CPU::CPU(): Stack(new uint64_t[CPU_STACK_SIZE]) {}
+CPU::CPU(): Stack(new uint8_t[CPU_STACK_SIZE]) {}
 
 CPU::~CPU() {
   delete[] this->Stack;
@@ -52,7 +52,7 @@ uint64_t CPU::Alloc(uint64_t size) {
   uint64_t Ptr = this->StackPtr;
   this->StackPtr += size;
 
-  memset(&this->Stack[Ptr], 0, size * sizeof(uint64_t));
+  memset(&this->Stack[Ptr], 0, size * sizeof(uint8_t));
 
   return Ptr;
 }

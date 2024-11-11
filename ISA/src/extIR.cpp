@@ -13,6 +13,7 @@ void ExtIR::buildIR(Binary &Bin) {
   IRBuilder<> builder(context);
   Type *voidType = Type::getVoidTy(context);
   Type *int64Type = Type::getInt64Ty(context);
+  Type *int8Type = Type::getInt8Ty(context);
 
   //[16 x i64] regFile = {0, 0, 0, 0}
   ArrayType *regFileType = ArrayType::get(int64Type, CPU::RegSize);

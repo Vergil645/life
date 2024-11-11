@@ -18,7 +18,7 @@ struct CPU {
   uint64_t NextPC{0};
   uint64_t Run{0};
   uint64_t StackPtr{0};
-  uint64_t* Stack{0};
+  uint8_t* Stack{0};
   bool DumpInstrs = false;
 
   CPU();
