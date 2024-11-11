@@ -37,6 +37,7 @@ Pass doesn't log the following instructions:
 
 Analysis script and statistics file are located in [statistics](./statistics/) directory.
 Brief summary:
+
 ```
 "Instruction <- User"           Percentage
 ------------------------------  ------------
@@ -71,3 +72,25 @@ All IR files has been generated again as well as statistics about instruction us
 
 Source code of IR generator is placed in [IRGen](./IRGen/) directory.
 Also within [IR](./IR/) directory file `app_gen.ll` has been placed, which contains generated IR.
+
+## ASM to IR
+
+Directory [ISA](./ISA/) contains implementation of *ASM to IR* application.
+ISA description can be found in file `./ISA/include/ISA.h`.
+
+Source code of `app` module written in ASM can be found in file `app.s` within [ISA](./ISA/) directory.
+
+Special instructions `LOAD_b`, `STORE_b`, `ADD_ASSIGN_LOAD_bi` and `INC_NE_i` encapsulates some frequently used (according to statistics) instruction combinations:
+
+```
+"Instruction <- User"           Percentage
+------------------------------  ------------
+getelementptr <- load           16.8%
+getelementptr <- getelementptr  14.9%
+load <- add                     14.9%
+...
+add <- icmp                     5.7%
+...
+getelementptr <- store          2.0%
+...
+```
