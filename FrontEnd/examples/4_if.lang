@@ -1,0 +1,17 @@
+fn main() {
+    let x = 1;
+    let y = x % 2;
+    let z = x % 3;
+    let ans = 0;
+
+    if y == 0 {
+        ans = 1;
+        if z == 1 {
+            ans = ans + 2;
+        }
+    }
+
+    if y == 1 {
+        ans = 11;
+    }
+}

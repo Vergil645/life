@@ -1,0 +1,14 @@
+fn main() {
+    let i = 0;
+    let ans = 0;
+
+    loop {
+        ans = ans + i;
+        continue if ans < 5;
+
+        i = i + 1;
+        break if i == 5;
+
+        ans = ans + 1;
+    }
+}

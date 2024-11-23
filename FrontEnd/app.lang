@@ -1,0 +1,92 @@
+fn main() {
+    let grid[132612];
+    let new_grid[132612];
+
+    let SIM_Y_SIZE = 256;
+    let SIM_X_SIZE = 512;
+    let row_size = 514;
+    let grid_size = 132612;
+
+    // ----- Initialization
+
+    let i = 0;
+    loop {
+        grid[i] = 0;
+        i = i + 1;
+        break if i >= grid_size;
+    }
+
+    let y = 1;
+    let x = 1;
+    loop {
+        x = 1;
+        loop {
+            if RAND % 5 == 0 {
+                grid[y * row_size + x] = 1;
+            }
+            x = x + 1;
+            break if x > SIM_X_SIZE;
+        }
+        y = y + 1;
+        break if y > SIM_Y_SIZE;
+    }
+
+    let generation = 0;
+    let live_neighbours = 0;
+    loop {
+        i = row_size;
+        loop {
+            x = i % row_size;
+            y = i / row_size;
+
+            if x != 0 {
+                if x != row_size - 1 {
+                    // draw a pixel
+
+                    PUT(x - 1, y - 1, -16777216 + 16777215 * grid[i]);
+
+                    // count the number of living neighbours
+
+                    live_neighbours = grid[i - row_size - 1] + grid[i - row_size] + grid[i - row_size + 1]
+                                    + grid[i - 1] + grid[i + 1]
+                                    + grid[i + row_size - 1] + grid[i + row_size] + grid[i + row_size + 1];
+
+                    // make a transition
+
+                    new_grid[i] = 0;
+
+                    if live_neighbours == 3 {
+                        new_grid[i] = 1;
+                    }
+
+                    if live_neighbours == 2 {
+                        if grid[i] != 0 {
+                            new_grid[i] = 1;
+                        }
+                    }
+                }
+            }
+
+            i = i + 1;
+            break if i >= grid_size - row_size;
+        }
+
+        // transfer the grid to a new state
+
+        i = 0;
+        loop {
+            grid[i] = new_grid[i];
+            i = i + 1;
+            break if i >= grid_size;
+        }
+
+        // flush generated frame
+
+        FLUSH;
+
+        // increase generation
+
+        generation = generation + 1;
+        break if generation >= 1000;
+    }
+}
