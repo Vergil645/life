@@ -94,3 +94,42 @@ add <- icmp                     5.7%
 getelementptr <- store          2.0%
 ...
 ```
+
+## FrontEnd
+
+Directory [FrontEnd](./FrontEnd/) contains implementation for FrontEnd of my language.
+
+Source code of `app` module written in my language can be found in file `app.lang` within [FrontEnd](./FrontEnd/) directory.
+
+Directory [FrontEnd/examples](./FrontEnd/examples/) contains example programs written in for subsets of my language.
+
+Script [build.sh](./FrontEnd/build.sh) can be used to build FrontEnd application.
+Compiled `start.out` binary can be run in 2 modes:
+1. `start.out run` translates language into IR and execute it;
+2. `start.out` only translates language into IR.
+
+Language description:
+1. Program consists of 1+ function declarations.
+   - Function must be defined before usage.
+   - Executable program must contain `main` function.
+   - Currently functions can only have type `() -> void`.
+2. Function consists of statements:
+   - `Declaration`
+   - `Assignment`
+   - `Put`
+   - `Flush`
+   - `FunctionCall`
+   - `IfStatement`
+   - `LoopStatement`
+   - `ContinueStatement`
+   - `BreakStatement`
+3. Variable can be one of:
+   - 32-bit integer variable,
+   - fixed size array (allocated on stack, has constant size) of 32-bit integer values.
+4. Variable must be **declared** via `let` keyword before any usage:
+   - `let x = 1;` (instead of `1` there can be any expression)
+   - or `let x[128];`
+5. Conditional branching have syntax `if ... { ... }`.
+6. `loop { ... }` is an infinite loop.
+7. `break if ...;` breaks innermost loop if condition is not 0.
+8. `continue if ...;` continues innermost loop if condition is not 0.
