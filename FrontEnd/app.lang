@@ -39,30 +39,28 @@ fn main() {
             x = i % row_size;
             y = i / row_size;
 
-            if x != 0 {
-                if x != row_size - 1 {
-                    // draw a pixel
+            if (x == 0) + (x == row_size - 1) == 0 {
+                // draw a pixel
 
-                    PUT(x - 1, y - 1, -16777216 + 16777215 * grid[i]);
+                PUT(x - 1, y - 1, -16777216 + 16777215 * grid[i]);
 
-                    // count the number of living neighbours
+                // count the number of living neighbours
 
-                    live_neighbours = grid[i - row_size - 1] + grid[i - row_size] + grid[i - row_size + 1]
-                                    + grid[i - 1] + grid[i + 1]
-                                    + grid[i + row_size - 1] + grid[i + row_size] + grid[i + row_size + 1];
+                live_neighbours = grid[i - row_size - 1] + grid[i - row_size] + grid[i - row_size + 1]
+                                + grid[i - 1] + grid[i + 1]
+                                + grid[i + row_size - 1] + grid[i + row_size] + grid[i + row_size + 1];
 
-                    // make a transition
+                // make a transition
 
-                    new_grid[i] = 0;
+                new_grid[i] = 0;
 
-                    if live_neighbours == 3 {
+                if live_neighbours == 3 {
+                    new_grid[i] = 1;
+                }
+
+                if live_neighbours == 2 {
+                    if grid[i] != 0 {
                         new_grid[i] = 1;
-                    }
-
-                    if live_neighbours == 2 {
-                        if grid[i] != 0 {
-                            new_grid[i] = 1;
-                        }
                     }
                 }
             }

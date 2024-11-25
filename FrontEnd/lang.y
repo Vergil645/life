@@ -4,11 +4,17 @@
 #include <map>
 #include <vector>
 
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Verifier.h"
 #include "llvm/Support/TargetSelect.h"
+
+extern "C" {
+    #include "sim.h"
+}
 
 using namespace llvm;
 
@@ -95,7 +101,41 @@ int main(int argc, char **argv)
 
     module->print(outs(), nullptr);
 
-    return 0;
+    if (argc != 2 || std::string(argv[1]) != "run")
+        return 0;
+
+    outs() << "[EE] Run\n";
+
+    InitializeNativeTarget();
+    InitializeNativeTargetAsmPrinter();
+
+    Function* mainFunc = module->getFunction("main");
+
+    ExecutionEngine* ee = EngineBuilder(std::unique_ptr<Module>(module)).create();
+    ee->InstallLazyFunctionCreator([&](const std::string& fnName) -> void* {
+        if (fnName == "simFlush") {
+            return reinterpret_cast<void*>(simFlush);
+        }
+        if (fnName == "simPutPixel") {
+            return reinterpret_cast<void*>(simPutPixel);
+        }
+        if (fnName == "simRand") {
+            return reinterpret_cast<void*>(simRand);
+        }
+        return nullptr;
+    });
+    ee->finalizeObject();
+
+    simInit();
+
+    ArrayRef<GenericValue> noargs;
+    outs() << "[EE] Running code\n";
+    ee->runFunction(mainFunc, noargs);
+    outs() << "[EE] Code was run\n";
+
+    simExit();
+
+    return EXIT_SUCCESS;
 }
 %}
 

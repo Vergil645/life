@@ -6,18 +6,20 @@ set -euxo pipefail
 
 pushd "${SCRIPT_DIR}"
 
-bison -d "${SCRIPT_DIR}/lang.y"
-lex "${SCRIPT_DIR}/lang.lex"
+bison -d "lang.y"
+lex "lang.lex"
 
 clang++-18 \
-    -I "${SCRIPT_DIR}/../include" \
-    "${SCRIPT_DIR}/lex.yy.c" \
-    "${SCRIPT_DIR}/lang.tab.c" \
+    -I "../include" \
+    "lex.yy.c" \
+    "lang.tab.c" \
     $(llvm-config-18 --cppflags --ldflags --libs) \
-    -o "${SCRIPT_DIR}/start.out"
+    -lSDL2 \
+    "../build/lib/libsim.a" \
+    -o "start.out"
 
-rm "${SCRIPT_DIR}/lang.tab.c" \
-    "${SCRIPT_DIR}/lang.tab.h" \
-    "${SCRIPT_DIR}/lex.yy.c"
+rm "lang.tab.c" \
+    "lang.tab.h" \
+    "lex.yy.c"
 
 popd
